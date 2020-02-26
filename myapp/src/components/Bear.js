@@ -12,17 +12,40 @@ export default () => {
     } , [] )
 
     const getBears = async () => {
-       const result = await axios.get('http://localhost/api/bears')
+       const result = await axios.get(`http://localhost/api/bears`)
        console.log(result.data)
        setBears(result.data)
     }
 
     const addBear = async () => {
-        const result = await axios.post('http://localhost/api/bears', {
+        const result = await axios.post(`http://localhost/api/bears`, {
             name,
             weight
         })
         console.log(result.data)
+        getBears()
+    }
+
+    const getBear = async (id) => {
+        const result = await axios.get(`http://localhost/api/bears/${id}`)
+        console.log(result.data)
+        setName(result.data.name)
+        setWeight(result.data.weight)        
+    }
+    const updateBear = async (id) => {
+        const result = await axios.put(`http://localhost/api/bears/${id}`,{
+            name,
+            weight
+        })
+
+        console.log(result.data)
+        setName(result.data.name)
+        setWeight(result.data.weight)  
+        getBears()      
+    }
+
+    const delBear = async (id) => {
+        const result = await axios.delete(`http://localhost/api/bears/${id}`)       
         getBears()
     }
 
@@ -32,6 +55,9 @@ export default () => {
                 return (
                     <li key={index}>
                         {bear.name} : {bear.weight}
+                        <button onClick={() => getBear(bear.id)}> Get </button>
+                        <button onClick={() => delBear(bear.id)}> Del </button>
+                        <button onClick={() => updateBear(bear.id)}> Update </button>
                     </li>
                 )
             })
@@ -47,6 +73,9 @@ export default () => {
             <ul>
                  {printBears()}
             </ul>
+            <h2>Get Bear</h2>
+            Get: {name} : {weight}
+
             <h2>Add Bear</h2>
             Name: 
             <input 
